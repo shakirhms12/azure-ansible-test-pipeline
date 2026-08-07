@@ -9,16 +9,6 @@ parameters:
     - python
     - java
 
-- name: target_ip
-  displayName: Target VM IP
-  type: string
-  default: ""
-
-- name: vm_user
-  displayName: VM Username
-  type: string
-  default: ""
-
 pool:
   name: ansiblepool
 
@@ -42,10 +32,10 @@ steps:
 - script: |
     cat > inventory.ini <<EOF
     [linux]
-    target ansible_host=${{ parameters.target_ip }}
+    target ansible_host=$(TARGET_IP)
 
     [linux:vars]
-    ansible_user=${{ parameters.vm_user }}
+    ansible_user=$(VM_USER)
     ansible_connection=ssh
     ansible_python_interpreter=/usr/bin/python3
     EOF
