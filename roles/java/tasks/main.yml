@@ -1,0 +1,34 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install Java
+  apt:
+    name:
+      - openjdk-17-jdk
+      - maven
+      - git
+    state: present
+
+- name: Verify Java
+  command: java -version
+  register: java_version
+  ignore_errors: yes
+
+- debug:
+    var: java_version.stderr
+
+- name: Verify Maven
+  command: mvn --version
+  register: maven_version
+
+- debug:
+    var: maven_version.stdout
+
+- name: Verify Git
+  command: git --version
+  register: git_version
+
+- debug:
+    var: git_version.stdout

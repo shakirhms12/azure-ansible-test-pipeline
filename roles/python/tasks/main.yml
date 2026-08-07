@@ -1,0 +1,33 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install Python
+  apt:
+    name:
+      - python3
+      - python3-pip
+      - git
+    state: present
+
+- name: Verify Python
+  command: python3 --version
+  register: python_version
+
+- debug:
+    var: python_version.stdout
+
+- name: Verify Pip
+  command: pip3 --version
+  register: pip_version
+
+- debug:
+    var: pip_version.stdout
+
+- name: Verify Git
+  command: git --version
+  register: git_version
+
+- debug:
+    var: git_version.stdout

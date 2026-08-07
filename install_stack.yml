@@ -1,0 +1,18 @@
+---
+- name: Install Software Stack
+  hosts: linux
+  become: true
+
+  pre_tasks:
+
+    - name: Show selected language
+      debug:
+        msg: "Selected Stack = {{ language }}"
+
+  roles:
+
+    - role: python
+      when: language == "python"
+
+    - role: java
+      when: language == "java"
