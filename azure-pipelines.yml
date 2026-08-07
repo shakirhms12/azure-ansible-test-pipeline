@@ -9,22 +9,28 @@ parameters:
     - python
     - java
 
+- name: target_ip
+  displayName: Target VM IP
+  type: string
+  default: ""
+
+- name: vm_user
+  displayName: VM Username
+  type: string
+  default: ""
+
 pool:
   name: ansiblepool
 
-variables:
-- name: TARGET_IP
-  value: ""
-
-- name: VM_USER
-  value: ""
-
-# Create VM_PASSWORD as a Secret Variable in Azure DevOps
-# Do NOT hardcode the password here.
+# VM_PASSWORD must be created as a Secret Variable in Azure DevOps
+# (Pipeline -> Edit -> Variables -> lock icon). Do NOT hardcode it here.
 
 steps:
 - checkout: self
 
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
 
 - script: |
     python -m pip install --upgrade pip
@@ -36,10 +42,10 @@ steps:
 - script: |
     cat > inventory.ini <<EOF
     [linux]
-    target ansible_host=$(TARGET_IP)
+    target ansible_host=${{ parameters.target_ip }}
 
     [linux:vars]
-    ansible_user=$(VM_USER)
+    ansible_user=${{ parameters.vm_user }}
     ansible_connection=ssh
     ansible_python_interpreter=/usr/bin/python3
     EOF
@@ -48,7 +54,9 @@ steps:
   displayName: Create Inventory
 
 - script: |
-    ansible-playbook install_stack.yml \
+    ansible-playbook -i inventory.ini install_stack.yml \
       -e "language=${{ parameters.language }}" \
-      -e "ansible_password=$(VM_PASSWORD)"
+      -e "ansible_password=$ANSIBLE_PASSWORD"
   displayName: Run Playbook
+  env:
+    ANSIBLE_PASSWORD: $(VM_PASSWORD)
