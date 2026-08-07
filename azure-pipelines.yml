@@ -19,8 +19,6 @@ variables:
 - name: VM_USER
   value: ""
 
-- name: VM_PASSWORD
-  value: ""
 # Create VM_PASSWORD as a Secret Variable in Azure DevOps
 # Do NOT hardcode the password here.
 
