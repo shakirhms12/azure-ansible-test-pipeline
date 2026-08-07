@@ -18,10 +18,6 @@ pool:
 steps:
 - checkout: self
 
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
-
 - script: |
     python -m pip install --upgrade pip
     pip install ansible
